@@ -16,26 +16,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: yarn
+      - name: Setup Environment (Install & Cache Dependencies)
+        uses: ./.github/actions/setup-env
 
-      - name: Cache Turbo
-        uses: actions/cache@v3
-        with:
-          path: .turbo
-          key: turbo-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
-          restore-keys: |
-            turbo-${{ runner.os }}-${{ github.ref }}-
-            turbo-${{ runner.os }}-
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Install Cypress
-        run: npx cypress install
-
-      - name: Run Cypress integration tests
-        run: yarn integration
+      - name: Run Cypress Integration Tests
+        run: turbo run integration
