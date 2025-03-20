@@ -20,4 +20,4 @@ jobs:
         uses: ./.github/actions/setup-env
 
       - name: Run Cypress Integration Tests
-        run: yarn integration
+        run: yarn integration --filter=./apps/web
