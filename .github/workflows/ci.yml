@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  integration:
+    name: Install & Run Cypress Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Environment (Install & Cache Dependencies)
+        uses: ./.github/actions/setup-env
+
+      - name: Run Cypress Integration Tests
+        run: yarn integration --filter=./apps/web
