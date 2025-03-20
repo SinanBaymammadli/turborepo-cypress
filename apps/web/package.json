@@ -10,7 +10,8 @@
     "lint": "next lint --max-warnings 0",
     "check-types": "tsc --noEmit",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "integration": "start-server-and-test start http://localhost:3000 cy:run"
   },
   "dependencies": {
     "@repo/ui": "*",
