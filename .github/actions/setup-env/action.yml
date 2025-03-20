@@ -30,6 +30,6 @@ runs:
         restore-keys: |
           cypress-${{ runner.os }}-
 
-    - name: Install Cypress
-      run: npx cypress install
-      shell: bash
+    # - name: Install Cypress
+    #   run: npx cypress install
+    #   shell: bash
