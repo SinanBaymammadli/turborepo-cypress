@@ -1,5 +1,16 @@
 name: Setup Environment
 description: Installs dependencies and caches Node modules & Cypress
+
+inputs:
+  workdir: # path where to install
+    description: "(path)"
+    required: false
+    default: ./
+  with-cache: # set false if you don't need to use cache
+    description: "(true|false)"
+    required: false
+    default: "true"
+
 runs:
   using: composite
   steps:
