@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        uses: ./.github/actions/install-deps
+        uses: ./.github/actions/setup-env
 
   integration:
     name: ⚙️ Integration Tests ${{ matrix.package }}
@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        uses: ./.github/actions/install-deps
+        uses: ./.github/actions/setup-env
 
       - name: Cache turbo setup
         uses: actions/cache@v4
