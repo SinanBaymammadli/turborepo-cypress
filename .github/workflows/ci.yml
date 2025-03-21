@@ -9,15 +9,41 @@ on:
       - main
 
 jobs:
-  integration:
-    name: Install & Run Cypress Tests
+  install-dependencies:
+    name: Install dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Setup Environment (Install & Cache Dependencies)
+      - name: Install dependencies
         uses: ./.github/actions/setup-env
 
-      - name: Run Cypress Integration Tests
-        run: yarn integration --filter=./apps/web
+  integration:
+    name: ⚙️ Integration Tests ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON('["web"]') }}
+    needs:
+      - install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        uses: ./.github/actions/setup-env
+
+      - name: Cache turbo setup
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-integration-${{ matrix.package }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-integration-${{ matrix.package }}
+
+      - name: Run integration Test on fragment - ${{  matrix.package }}
+        run: yarn integration --filter=./apps/${{  matrix.package }}

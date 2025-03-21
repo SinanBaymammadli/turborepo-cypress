@@ -1,35 +1,30 @@
 name: Setup Environment
 description: Installs dependencies and caches Node modules & Cypress
+
+inputs:
+  workdir: # path where to install
+    description: "(path)"
+    required: false
+    default: ./
+  with-cache: # set false if you don't need to use cache
+    description: "(true|false)"
+    required: false
+    default: "true"
+
 runs:
   using: composite
   steps:
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
+    - name: Restore node_modules cache
+      id: packages-cache
+      uses: actions/cache@v4
       with:
-        node-version: 20
-        cache: yarn
+        path: |
+          **/node_modules
+          ~/.cache/Cypress
+        key: ${{ runner.os }}-packages-with-cypress-${{ hashFiles('yarn.lock') }}
 
-    - name: Cache Turbo
-      uses: actions/cache@v3
-      with:
-        path: .turbo
-        key: turbo-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
-        restore-keys: |
-          turbo-${{ runner.os }}-${{ github.ref }}-
-          turbo-${{ runner.os }}-
-
-    - name: Install Dependencies
+    - name: Install dependencies
+      if: steps.packages-cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile
       shell: bash
-
-    - name: Cache Cypress Binary
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/Cypress
-        key: cypress-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          cypress-${{ runner.os }}-
-
-    - name: Install Cypress
-      run: npx cypress install
-      shell: bash
+      working-directory: ${{ inputs.workdir }}
